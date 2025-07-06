@@ -14,6 +14,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+/**
+ * Конфигурационный класс для настройки безопасности приложения с использованием Spring Security.
+ * Определяет правила авторизации запросов, управление сессиями, фильтры аутентификации и обработку выхода.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -30,7 +34,15 @@ public class SecurityConfig {
     };
 
 
-
+    /**
+     * Настраивает цепочку фильтров безопасности для обработки HTTP-запросов.
+     * Определяет правила доступа к эндпоинтам, отключает CSRF, устанавливает stateless-сессии,
+     * добавляет JWT-фильтр и настраивает обработку выхода.
+     *
+     * @param http объект {@link HttpSecurity} для настройки безопасности
+     * @return объект {@link SecurityFilterChain}, представляющий настроенную цепочку фильтров
+     * @throws Exception если возникает ошибка при конфигурации безопасности
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

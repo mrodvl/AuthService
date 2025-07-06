@@ -16,6 +16,13 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findByToken(String token);
 
+    /**
+     * Находит все действующие токены для пользователя с указанным идентификатором.
+     * Возвращает токены, которые не истекли (expired = false) и не были отозваны (revoked = false).
+     *
+     * @param user_id идентификатор пользователя
+     * @return список объектов {@link Token}, соответствующих действующим токенам пользователя
+     */
     @Query("""
            SELECT t from Token t 
            inner join User u on t.user.id = u.id 

@@ -1,13 +1,11 @@
 package org.example.authservice.service;
 
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.example.authservice.dto.AuthentificationResponseToken;
 import org.example.authservice.dto.UserAuthDTO;
 import org.example.authservice.dto.UserRegDTO;
-import org.example.authservice.entity.Roles;
 import org.example.authservice.entity.Token;
 import org.example.authservice.entity.User;
 import org.example.authservice.repo.TokenRepository;
@@ -16,7 +14,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+/**
+ * Сервис для управления пользователями, включая регистрацию, аутентификацию,
+ * обновление токенов и получение информации о пользователях.
+ */
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -26,6 +27,12 @@ public class UserServiceImpl implements UserService {
     private TokenRepository tokenRepository;
     private AuthenticationManager authenticationManager;
 
+    /**
+     * Регистрирует нового пользователя в системе и генерирует токены аутентификации.
+     *
+     * @param userRegDTO объект передачи данных, содержащий информацию для регистрации пользователя
+     * @return объект {@link AuthentificationResponseToken} с токенами доступа и обновления
+     */
     @Override
     public AuthentificationResponseToken registrationUser(UserRegDTO userRegDTO) {
         User user = User.builder()
@@ -47,6 +54,14 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * Аутентифицирует пользователя и генерирует новые JWT-токены.
+     * Отзывает все предыдущие действующие токены пользователя.
+     *
+     * @param userAuthDTO объект передачи данных, содержащий учетные данные пользователя (логин/пароль)
+     * @return объект {@link AuthentificationResponseToken} с токенами доступа и обновления
+     * @throws org.springframework.security.core.AuthenticationException если аутентификация не удалась
+     */
     public AuthentificationResponseToken authUser(UserAuthDTO userAuthDTO) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userAuthDTO.getUsername(),
@@ -73,7 +88,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
+    /**
+     * Отзывает все действующие токены пользователя, устанавливая им статус истекших и отозванных.
+     *
+     * @param user пользователь, чьи токены необходимо отозвать
+     */
     public void revokeAllUserToken(User user) {
         var validsTokens = tokenRepository.findAllValidTokensByUserId(user.getId());
         if (validsTokens.isEmpty()) {
@@ -131,6 +150,12 @@ public class UserServiceImpl implements UserService {
 //        throw  new IllegalStateException("Invalid refresh token");
 //    }
 
+    /**
+     * Сохраняет JWT-токен пользователя в базе данных.
+     *
+     * @param user  пользователь, для которого сохраняется токен
+     * @param token строка JWT-токена
+     */
     private void saveUserToken(User user, String token) {
         Token tokenJwt = Token.builder()
                 .user(user)
@@ -141,6 +166,15 @@ public class UserServiceImpl implements UserService {
 
         tokenRepository.save(tokenJwt);
     }
+
+    /**
+     * Обновляет токен доступа пользователя с использованием токена обновления.
+     *
+     * @param httpResponse HTTP-ответ, используемый для отправки результата
+     * @param httpRequest  HTTP-запрос, содержащий токен обновления в заголовке Authorization
+     * @return объект {@link AuthentificationResponseToken} с обновленными токенами доступа и обновления
+     * @throws IllegalStateException если токен обновления отсутствует, недействителен или пользователь не найден
+     */
 
     @Override
     public AuthentificationResponseToken refreshToken(HttpServletResponse httpResponse,

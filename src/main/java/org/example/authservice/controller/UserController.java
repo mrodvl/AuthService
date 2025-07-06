@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контроллер REST для обработки запросов, связанных с пользователем.
+ */
 @RestController
 @AllArgsConstructor
 public class UserController {
@@ -21,6 +24,13 @@ public class UserController {
    // private final TokenRepository tokenRepository;
     private final UserService userService;
 
+    /**
+     * Извлекает информацию профиля аутентифицированного пользователя.
+     *
+     * @param request HTTP-запрос, содержащий токен JWT в заголовке Authorization
+     * @return {@link ResponseEntity}, содержащий данные пользователя, если аутентифицирован
+     *
+     */
     @GetMapping("/lk")
     public ResponseEntity<User> lk(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");

@@ -5,7 +5,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Перечисление ролей пользователей в системе
+ * Определяет доступные роли (USER, ADMIN) и предоставляет метод для получения списка полномочий
+ */
 public enum Roles {
     USER, ADMIN;
 

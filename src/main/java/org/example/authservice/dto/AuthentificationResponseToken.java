@@ -4,7 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+/**
+ * Объект передачи данных (DTO) для представления токенов аутентификации.
+ * Содержит токен доступа (accessToken) и токен обновления (refreshToken),
+ * возвращаемые в ответ на запросы аутентификации или регистрации
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -10,13 +10,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис для обработки выхода пользователя из системы.
+ * Реализует интерфейс {@link LogoutHandler} для выполнения операций выхода, включая аннулирование JWT-токена.
+ */
+
 @RequiredArgsConstructor
 @Service
 public class LogoutHendlerImpl implements LogoutHandler {
-
-
     private final TokenRepository tokenRepository;
 
+    /**
+     * Выполняет выход пользователя из системы, аннулируя JWT-токен и очищая контекст безопасности.
+     *
+     * @param request        HTTP-запрос, содержащий заголовок Authorization с JWT-токеном
+     * @param response       HTTP-ответ, используемый для установки статуса ответа
+     * @param authentication объект аутентификации текущего пользователя
+     */
     @Override
     public void logout(HttpServletRequest request,
                        HttpServletResponse response,

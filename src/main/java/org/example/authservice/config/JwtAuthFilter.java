@@ -17,6 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Фильтр для аутентификации запросов с использованием JWT-токенов.
+ * Проверяет наличие и валидность JWT-токена в заголовке запроса, аутентифицирует пользователя
+ * и устанавливает контекст безопасности для защищенных запросов.
+ */
 @Component
 @RequiredArgsConstructor
 
@@ -25,6 +30,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
+    /**
+     * Обрабатывает входящий HTTP-запрос, проверяя наличие и валидность JWT-токена.
+     * Если токен действителен, устанавливает аутентификацию в контексте безопасности.
+     * Пропускает запросы к эндпоинтам /api/v1/auth и /api/v1/reg без проверки.
+     *
+     * @param request     HTTP-запрос, содержащий заголовок Authorization с JWT-токеном
+     * @param response    HTTP-ответ, используемый для обработки запроса
+     * @param filterChain цепочка фильтров для продолжения обработки запроса
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException      если возникает ошибка ввода-вывода
+     * @throws IllegalStateException если токен отсутствует или недействителен
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -54,7 +71,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         jwtToken = authorizationHeader.substring(7);
         username = jwtService.extractUsername(jwtToken);
 
-
+        // Проверка валидности токена
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
