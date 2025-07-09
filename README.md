@@ -17,11 +17,12 @@
 Выход пользователя (logout)
 
 **🛠️ Используемые технологии**
-```Java 17+
-Spring Boot
-Spring Security, JWT (JSON Web Tokens)
-PostgreSQL
-Gradle (Kotlin DSL)
+```
+Java 17+
+Фреймворк: Spring Boot
+Безопасность: Spring Security, JWT (JSON Web Tokens)
+Хранение данных: PostgreSQL
+Сборка: Gradle (Kotlin DSL)
 ```
 
 
